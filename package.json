@@ -1,5 +1,5 @@
 {
-  "name": "gendiff",
+  "name": "miraculous-gendiff",
   "version": "1.0.0",
   "description": "A generator of configuration files' differences",
   "bin": {
