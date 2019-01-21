@@ -1,10 +1,11 @@
 {
   "name": "miraculous-gendiff",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A generator of configuration files' differences",
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
   },
+  "main": "src/index.js",
   "files": [
     "dist"
   ],
@@ -44,6 +45,7 @@
     "jest-cli": "^23.6.0"
   },
   "dependencies": {
-    "commander": "^2.19.0"
+    "commander": "^2.19.0",
+    "lodash": "^4.17.11"
   }
 }
