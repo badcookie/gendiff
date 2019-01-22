@@ -11,4 +11,5 @@ A generator of configuration files' differences.
 [![asciicast](https://asciinema.org/a/8fLPDVpiePvZiyOnW4i4q4xQ2.svg)](https://asciinema.org/a/8fLPDVpiePvZiyOnW4i4q4xQ2)
 
 ## Action
-[![asciicast](https://asciinema.org/a/yMOiATH9gNiPs6aa7BW1welnD.svg)](https://asciinema.org/a/yMOiATH9gNiPs6aa7BW1welnD)
+[![asciicast](https://asciinema.org/a/18qmI7UTMwpBv8sbDpM7s7bkY.svg)](https://asciinema.org/a/18qmI7UTMwpBv8sbDpM7s7bkY)
+
