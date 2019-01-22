@@ -1,9 +1,11 @@
 import _ from 'lodash';
 import fs from 'fs';
+import path from 'path';
+import parse from './parsers';
 
 export default (filepath1, filepath2) => {
-  const contentBefore = JSON.parse(fs.readFileSync(filepath1));
-  const contentAfter = JSON.parse(fs.readFileSync(filepath2));
+  const contentBefore = parse(fs.readFileSync(filepath1), path.extname(filepath1));
+  const contentAfter = parse(fs.readFileSync(filepath2), path.extname(filepath2));
 
   const mergedKeys = _.union(_.keys(contentBefore), _.keys(contentAfter));
 
