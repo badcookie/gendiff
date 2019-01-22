@@ -12,8 +12,9 @@ command
 command
   .arguments('<firstConfig> <secondConfig>')
   .action((firstConfig, secondConfig) => {
-    const generatedDifference = genDiff(firstConfig, secondConfig);
-    console.log(generatedDifference);
+    console.log('');
+    console.log(genDiff(firstConfig, secondConfig));
+    console.log('');
   });
 
 command.parse(process.argv);

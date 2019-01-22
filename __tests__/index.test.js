@@ -2,8 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import genDiff from '../src';
 
-const { dir } = path.parse(__filename);
-const absolutePath = path.join(dir, '__fixtures__');
+const absolutePath = path.join(__dirname, '__fixtures__');
 
 const getAbsoluteFilePath = filename => path.join(absolutePath, filename);
 

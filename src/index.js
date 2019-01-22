@@ -9,22 +9,21 @@ export default (filepath1, filepath2) => {
 
   const mergedKeys = _.union(_.keys(contentBefore), _.keys(contentAfter));
 
-  const callback = (key) => {
+  const buildDiffString = (key) => {
     const valueBefore = contentBefore[key];
     const valueAfter = contentAfter[key];
 
     if (valueBefore === valueAfter) {
-      return `  ${key}: ${valueBefore}\n`;
+      return `  ${key}: ${valueBefore}`;
     }
     if (_.has(contentBefore, key)) {
-      const output = `- ${key}: ${valueBefore}\n`;
+      const output = `- ${key}: ${valueBefore}`;
       return _.has(contentAfter, key)
-        ? `${output}+ ${key}: ${valueAfter}\n`
+        ? `${output}\n+ ${key}: ${valueAfter}`
         : output;
     }
-    return `+ ${key}: ${valueAfter}\n`;
+    return `+ ${key}: ${valueAfter}`;
   };
 
-  const diffString = mergedKeys.map(callback).join('');
-  return `\n${diffString}`;
+  return mergedKeys.map(buildDiffString).join('\n');
 };
