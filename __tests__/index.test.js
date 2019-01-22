@@ -11,34 +11,18 @@ const getRelativeFilePath = (filename) => {
   return path.join(commonFixturePath, filename);
 };
 
-test('JSON absolute paths', () => {
-  const filepath1 = getAbsoluteFilePath('config1.json');
-  const filepath2 = getAbsoluteFilePath('config2.json');
+const check = ({ fileBefore, fileAfter, fileExpected }) => {
+  const filepath1 = getAbsoluteFilePath(fileBefore);
+  const filepath2 = getAbsoluteFilePath(fileAfter);
   const actual = genDiff(filepath1, filepath2);
-  const expected = fs.readFileSync(getRelativeFilePath('expected1.txt')).toString();
+  const expected = fs.readFileSync(getRelativeFilePath(fileExpected)).toString();
   expect(actual).toEqual(expected);
-});
+};
 
-test('JSON relative paths', () => {
-  const filepath1 = getRelativeFilePath('config3.json');
-  const filepath2 = getRelativeFilePath('config4.json');
-  const actual = genDiff(filepath1, filepath2);
-  const expected = fs.readFileSync(getRelativeFilePath('expected2.txt')).toString();
-  expect(actual).toBe(expected);
-});
-
-test('yaml absolute paths', () => {
-  const filepath1 = getAbsoluteFilePath('config5.yml');
-  const filepath2 = getAbsoluteFilePath('config6.yaml');
-  const actual = genDiff(filepath1, filepath2);
-  const expected = fs.readFileSync(getRelativeFilePath('expected1.txt')).toString();
-  expect(actual).toEqual(expected);
-});
-
-test('yaml relative paths', () => {
-  const filepath1 = getRelativeFilePath('config5.yml');
-  const filepath2 = getRelativeFilePath('config6.yaml');
-  const actual = genDiff(filepath1, filepath2);
-  const expected = fs.readFileSync(getRelativeFilePath('expected1.txt')).toString();
-  expect(actual).toBe(expected);
-});
+test.each`
+  fileBefore        | fileAfter         | fileExpected       | format
+  ${'config1.json'} | ${'config2.json'} | ${'expected1.txt'} | ${'.json'}
+  ${'config3.json'} | ${'config4.json'} | ${'expected2.txt'} | ${'.json'}
+  ${'config5.yml'}  | ${'config6.yaml'} | ${'expected1.txt'} | ${'.yml/.yaml'}
+  ${'config7.ini'}  | ${'config8.ini'}  | ${'expected2.txt'} | ${'.ini'}
+`('Check absolute paths for $format format', check);
