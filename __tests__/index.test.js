@@ -17,7 +17,7 @@ test('JSON absolute paths', () => {
   const filepath2 = getAbsoluteFilePath('config2.json');
   const actual = genDiff(filepath1, filepath2);
   const expected = fs.readFileSync(getRelativeFilePath('expected1.txt')).toString();
-  expect(actual).toEqual(expected);
+  expect(actual).toBe(expected);
 });
 
 test('JSON relative paths', () => {
@@ -25,5 +25,5 @@ test('JSON relative paths', () => {
   const filepath2 = getRelativeFilePath('config4.json');
   const actual = genDiff(filepath1, filepath2);
   const expected = fs.readFileSync(getRelativeFilePath('expected2.txt')).toString();
-  expect(actual).toEqual(expected);
+  expect(actual).toBe(expected);
 });
