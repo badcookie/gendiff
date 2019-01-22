@@ -17,7 +17,6 @@ test('JSON absolute paths', () => {
   const filepath2 = getAbsoluteFilePath('config2.json');
   const actual = genDiff(filepath1, filepath2);
   const expected = fs.readFileSync(getRelativeFilePath('expected1.txt')).toString();
-  console.log(expected);
   expect(actual).toEqual(expected);
 });
 
@@ -26,5 +25,21 @@ test('JSON relative paths', () => {
   const filepath2 = getRelativeFilePath('config4.json');
   const actual = genDiff(filepath1, filepath2);
   const expected = fs.readFileSync(getRelativeFilePath('expected2.txt')).toString();
+  expect(actual).toBe(expected);
+});
+
+test('yaml absolute paths', () => {
+  const filepath1 = getAbsoluteFilePath('config5.yml');
+  const filepath2 = getAbsoluteFilePath('config6.yaml');
+  const actual = genDiff(filepath1, filepath2);
+  const expected = fs.readFileSync(getRelativeFilePath('expected1.txt')).toString();
+  expect(actual).toEqual(expected);
+});
+
+test('yaml relative paths', () => {
+  const filepath1 = getRelativeFilePath('config5.yml');
+  const filepath2 = getRelativeFilePath('config6.yaml');
+  const actual = genDiff(filepath1, filepath2);
+  const expected = fs.readFileSync(getRelativeFilePath('expected1.txt')).toString();
   expect(actual).toBe(expected);
 });
