@@ -1,20 +1,29 @@
 import fs from 'fs';
+import path from 'path';
 import genDiff from '../src';
 
-const absolutePath = '/home/badcookie/Documents/projects/gendiff/__tests__/__fixtures__';
+const { dir } = path.parse(__filename);
+const absolutePath = path.join(dir, '__fixtures__');
 
-test('absolute paths', () => {
-  const path1 = `${absolutePath}/config1.json`;
-  const path2 = `${absolutePath}/config2.json`;
-  const actual = genDiff(path1, path2);
-  const expected = fs.readFileSync('__tests__/__fixtures__/expected1.txt').toString();
+const getAbsoluteFilePath = filename => path.join(absolutePath, filename);
+
+const getRelativeFilePath = (filename) => {
+  const commonFixturePath = '__tests__/__fixtures__';
+  return path.join(commonFixturePath, filename);
+};
+
+test('JSON absolute paths', () => {
+  const filepath1 = getAbsoluteFilePath('config1.json');
+  const filepath2 = getAbsoluteFilePath('config2.json');
+  const actual = genDiff(filepath1, filepath2);
+  const expected = fs.readFileSync(getRelativeFilePath('expected1.txt')).toString();
   expect(actual).toEqual(expected);
 });
 
-test('relative paths', () => {
-  const path1 = '__tests__/__fixtures__/config3.json';
-  const path2 = '__tests__/__fixtures__/config4.json';
-  const actual = genDiff(path1, path2);
-  const expected = fs.readFileSync('__tests__/__fixtures__/expected2.txt').toString();
+test('JSON relative paths', () => {
+  const filepath1 = getRelativeFilePath('config3.json');
+  const filepath2 = getRelativeFilePath('config4.json');
+  const actual = genDiff(filepath1, filepath2);
+  const expected = fs.readFileSync(getRelativeFilePath('expected2.txt')).toString();
   expect(actual).toEqual(expected);
 });
