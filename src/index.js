@@ -1,29 +1,28 @@
 import _ from 'lodash';
 import fs from 'fs';
 
-export default (path1, path2) => {
-  const before = JSON.parse(fs.readFileSync(path1));
-  const after = JSON.parse(fs.readFileSync(path2));
+export default (filepath1, filepath2) => {
+  const contentBefore = JSON.parse(fs.readFileSync(filepath1));
+  const contentAfter = JSON.parse(fs.readFileSync(filepath2));
 
-  const mergedKeys = Array.from(
-    new Set([...Object.keys(before), ...Object.keys(after)]),
-  );
+  const mergedKeys = _.union(_.keys(contentBefore), _.keys(contentAfter));
 
   const callback = (acc, key) => {
-    const oldValue = before[key];
-    const newValue = after[key];
-    if (oldValue === newValue) {
-      return { ...acc, [`  ${key}`]: `${oldValue}` };
+    const valueBefore = contentBefore[key];
+    const valueAfter = contentAfter[key];
+
+    if (valueBefore === valueAfter) {
+      return { ...acc, key };
     }
-    if (_.has(before, key)) {
-      const output = { ...acc, [`- ${key}`]: `${oldValue}` };
-      return _.has(after, key)
-        ? { ...output, [`+ ${key}`]: `${newValue}` }
+    if (_.has(contentBefore, key)) {
+      const output = { ...acc, [`- ${key}`]: `${valueBefore}` };
+      return _.has(contentAfter, key)
+        ? { ...output, [`+ ${key}`]: `${valueAfter}` }
         : { ...output };
     }
-    return { ...acc, [`+ ${key}`]: `${newValue}` };
+    return { ...acc, [`+ ${key}`]: `${valueAfter}` };
   };
 
-  const diff = mergedKeys.reduce(callback, {});
-  return JSON.stringify(diff);
+  const diffObject = mergedKeys.reduce(callback, {});
+  return JSON.stringify(diffObject);
 };

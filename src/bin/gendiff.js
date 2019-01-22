@@ -12,9 +12,9 @@ command
 command
   .arguments('<firstConfig> <secondConfig>')
   .action((firstConfig, secondConfig) => {
-    const diff = genDiff(firstConfig, secondConfig);
+    const generatedDifference = genDiff(firstConfig, secondConfig);
     console.log('');
-    console.log(diff);
+    console.log(generatedDifference);
     console.log('');
   });
 
