@@ -15,7 +15,7 @@ const check = ({ fileBefore, fileAfter, fileExpected }) => {
   const filepath1 = getAbsoluteFilePath(fileBefore);
   const filepath2 = getAbsoluteFilePath(fileAfter);
   const actual = genDiff(filepath1, filepath2);
-  const expected = fs.readFileSync(getRelativeFilePath(fileExpected)).toString();
+  const expected = fs.readFileSync(getRelativeFilePath(fileExpected), 'utf-8');
   expect(actual).toEqual(expected);
 };
 

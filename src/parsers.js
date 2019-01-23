@@ -8,4 +8,4 @@ const parserFor = {
   '.ini': ini.parse,
 };
 
-export default (data, format) => parserFor[format](data.toString());
+export default (data, format) => parserFor[format](data);
