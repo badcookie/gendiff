@@ -1,20 +1,21 @@
 #!/usr/bin/env node
-import command from 'commander';
+import program from 'commander';
 import genDiff from '..';
+import { version } from '../../package.json';
 
-command
-  .description('Compares two configuration files and shows the difference.');
+program
+  .description('Compares two configuration files and shows the difference.')
+  .version(version);
 
-command
-  .option('-V, --version', 'output the version number')
-  .option('-f, --format [type]', 'output format');
+program
+  .option('-f, --format [type]', 'output format', 'sample');
 
-command
+program
   .arguments('<firstConfig> <secondConfig>')
   .action((firstConfig, secondConfig) => {
     console.log('');
-    console.log(genDiff(firstConfig, secondConfig));
+    console.log(genDiff(firstConfig, secondConfig, program.format));
     console.log('');
   });
 
-command.parse(process.argv);
+program.parse(process.argv);
