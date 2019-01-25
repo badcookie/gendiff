@@ -6,15 +6,15 @@ const stringifyValueFor = {
   added: (key, value) => `+ ${key}: ${value}`,
 };
 
-const offset = 4;
+const gap = 4;
 const getTab = count => ' '.repeat(count);
 
-const sampleRenderer = (ast, keyOffset = -2, braceOffset = -4) => {
-  const newKeyOffset = keyOffset + offset;
-  const newBraceOffset = braceOffset + offset;
+const sampleRenderer = (ast, lineOffset = -2) => {
+  const newLineOffset = lineOffset + gap;
+  const lowerBraceOffset = newLineOffset - 2;
 
-  const keyTab = getTab(newKeyOffset);
-  const braceTab = getTab(newBraceOffset);
+  const lineTab = getTab(newLineOffset);
+  const lowerBraceTab = getTab(lowerBraceOffset);
 
   const build = (node) => {
     const {
@@ -23,26 +23,25 @@ const sampleRenderer = (ast, keyOffset = -2, braceOffset = -4) => {
 
     if (state === 'nested') {
       return stringifyValueFor
-        .unmodified(key, sampleRenderer(children, newKeyOffset, newBraceOffset));
+        .unmodified(key, sampleRenderer(children, newLineOffset));
     }
 
     if (_.isObject(value)) {
-      const deepKeyTab = getTab(newKeyOffset + offset);
-      const deepBraceTab = getTab(newBraceOffset + offset);
+      const deeperLineTab = getTab(newLineOffset + gap);
+      const deeperBraceTab = getTab(lowerBraceOffset + gap);
 
-      const deepKeys = _.keys(value);
-      const deepString = deepKeys
+      const complexValueString = _.keys(value)
         .map(k => stringifyValueFor.unmodified(k, value[k]))
-        .join(`\n${deepKeyTab}`);
+        .join(`\n${deeperLineTab}`);
 
-      const deepValue = `{\n${deepKeyTab}${deepString}\n${deepBraceTab}}`;
-      return stringifyValueFor[state](key, deepValue);
+      const complexValueStringWithBraces = `{\n${deeperLineTab}${complexValueString}\n${deeperBraceTab}}`;
+      return stringifyValueFor[state](key, complexValueStringWithBraces);
     }
 
     return stringifyValueFor[state](key, value);
   };
 
-  return `{\n${keyTab}${ast.map(build).join(`\n${keyTab}`)}\n${braceTab}}`;
+  return `{\n${lineTab}${ast.map(build).join(`\n${lineTab}`)}\n${lowerBraceTab}}`;
 };
 
 export default sampleRenderer;
