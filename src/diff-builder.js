@@ -28,9 +28,7 @@ const types = [
   },
 ];
 
-const getTypeSettings = (...args) => (
-  types.find(({ predicate }) => predicate(...args))
-);
+const getTypeSettings = (...args) => types.find(({ predicate }) => predicate(...args));
 
 const buildDiff = (dataBefore, dataAfter) => {
   const mergedKeys = _.union(_.keys(dataBefore), _.keys(dataAfter));

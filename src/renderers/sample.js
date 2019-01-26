@@ -41,13 +41,13 @@ const sampleRenderer = (ast, lineOffset = 2) => {
     const deeperLineTab = getTab(lineOffset + gap);
     const deeperBraceTab = getTab(lowerBraceOffset + gap);
 
-    const valuesForStringify = values.map((innerValue) => {
-      if (!_.isObject(innerValue) || !innerValue) {
-        return innerValue;
+    const valuesForStringify = values.map((item) => {
+      if (!_.isObject(item) || !item) {
+        return item;
       }
 
-      const complexValueString = _.keys(innerValue)
-        .map(innerKey => stringifyValueFor.unmodified(innerKey, innerValue[innerKey]))
+      const complexValueString = _.keys(item)
+        .map(property => stringifyValueFor.unmodified(property, item[property]))
         .join(`\n${deeperLineTab}`);
 
       return `{\n${deeperLineTab}${complexValueString}\n${deeperBraceTab}}`;
