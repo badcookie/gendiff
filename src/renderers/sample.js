@@ -19,13 +19,14 @@ const stringify = (value, offset) => {
 };
 
 const getStringFor = {
-  deleted: (offset, key, value) => `- ${key}: ${stringify(value, offset)}`,
-  added: (offset, key, value) => `+ ${key}: ${stringify(value, offset)}`,
-  unmodified: (offset, key, value) => `  ${key}: ${stringify(value, offset)}`,
-  modified(offset, key, value, oldValue, newValue) {
-    return [this.deleted(offset, key, oldValue), this.added(offset, key, newValue)];
+  deleted: (offset, { key, value }) => `- ${key}: ${stringify(value, offset)}`,
+  added: (offset, { key, value }) => `+ ${key}: ${stringify(value, offset)}`,
+  unmodified: (offset, { key, value }) => `  ${key}: ${stringify(value, offset)}`,
+  modified(offset, { key, oldValue, newValue }) {
+    return [this.deleted(offset, { key, value: oldValue }),
+      this.added(offset, { key, value: newValue })];
   },
-  nested: (offset, key, value, oldValue, newValue, children, fn, depth) => `  ${key}: ${fn(children, depth)}`,
+  nested: (offset, { key, children }, fn, depth) => `  ${key}: ${fn(children, depth)}`,
 };
 
 const sample = (ast, depth = 1) => {
@@ -34,11 +35,8 @@ const sample = (ast, depth = 1) => {
   const lowerBraceTab = getTab(offset - 2);
 
   const buildString = (node) => {
-    const {
-      key, type, children, value, oldValue, newValue,
-    } = node;
-    const properties = [key, value, oldValue, newValue, children];
-    return getStringFor[type](offset, ...properties, sample, depth + 1);
+    const { type } = node;
+    return getStringFor[type](offset, node, sample, depth + 1);
   };
 
   const diffString = _.flatten(ast.map(buildString)).join(`\n${lineTab}`);
