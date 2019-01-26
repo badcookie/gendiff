@@ -1,73 +1,45 @@
 import _ from 'lodash';
 
-const unsetValue = () => null;
-
-const states = [
+const types = [
   {
-    state: 'added',
-    predicate: (key, oldData, newData) => (
-      !_.has(oldData, key) && _.has(newData, key)
-    ),
-    getChildren: unsetValue,
-    getValue: (key, oldData, newData) => newData[key],
+    type: 'added',
+    predicate: (key, oldData, newData) => !_.has(oldData, key) && _.has(newData, key),
+    properties: (key, oldData, newData) => ({ value: newData[key] }),
   },
   {
-    state: 'deleted',
-    predicate: (key, oldData, newData) => (
-      _.has(oldData, key) && !_.has(newData, key)
-    ),
-    getChildren: unsetValue,
-    getValue: (key, oldData) => oldData[key],
+    type: 'deleted',
+    predicate: (key, oldData, newData) => _.has(oldData, key) && !_.has(newData, key),
+    properties: (key, oldData) => ({ value: oldData[key] }),
   },
   {
-    state: 'nested',
-    predicate: (
-      (key, oldData, newData) => _.isObject(oldData[key]) && _.isObject(newData[key])
-    ),
-    getChildren: (fn, ...args) => fn(...args),
-    getValue: unsetValue,
+    type: 'nested',
+    predicate: (key, oldData, newData) => _.isObject(oldData[key]) && _.isObject(newData[key]),
+    properties: (key, oldData, newData, fn) => ({ children: fn(oldData[key], newData[key]) }),
   },
   {
-    state: 'unmodified',
-    predicate: (
-      (key, oldData, newData) => oldData[key] === newData[key]
-    ),
-    getChildren: unsetValue,
-    getValue: (key, oldData) => oldData[key],
+    type: 'unmodified',
+    predicate: (key, oldData, newData) => oldData[key] === newData[key],
+    properties: (key, oldData) => ({ value: oldData[key] }),
+  },
+  {
+    type: 'modified',
+    predicate: (key, oldData, newData) => oldData[key] !== newData[key],
+    properties: (key, oldData, newData) => ({ oldValue: oldData[key], newValue: newData[key] }),
   },
 ];
 
-const getStateSettings = (...args) => (
-  states.find(({ predicate }) => predicate(...args))
+const getTypeSettings = (...args) => (
+  types.find(({ predicate }) => predicate(...args))
 );
 
 const buildDiff = (dataBefore, dataAfter) => {
   const mergedKeys = _.union(_.keys(dataBefore), _.keys(dataAfter));
 
-  const build = (key) => {
-    const settings = getStateSettings(key, dataBefore, dataAfter);
-    return settings
-      ? {
-        key,
-        state: settings.state,
-        children: settings.getChildren(buildDiff, dataBefore[key], dataAfter[key]),
-        value: settings.getValue(key, dataBefore, dataAfter),
-      }
-      : [{
-        key,
-        state: 'deleted',
-        value: dataBefore[key],
-        children: null,
-      },
-      {
-        key,
-        state: 'added',
-        value: dataAfter[key],
-        children: null,
-      }];
-  };
-
-  return _.flatten(mergedKeys.map(build));
+  return mergedKeys.map((key) => {
+    const args = [key, dataBefore, dataAfter];
+    const { type, properties } = getTypeSettings(...args);
+    return { key, type, ...properties(...args, buildDiff) };
+  });
 };
 
 export default buildDiff;

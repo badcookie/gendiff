@@ -1,44 +1,59 @@
 import _ from 'lodash';
 
+const gap = 4;
+const getTab = count => ' '.repeat(count);
+
 const stringifyValueFor = {
   unmodified: (key, value) => `  ${key}: ${value}`,
   deleted: (key, value) => `- ${key}: ${value}`,
   added: (key, value) => `+ ${key}: ${value}`,
+  modified: (key, value, oldValue, newValue, tab) => (
+    `- ${key}: ${oldValue}\n${tab}+ ${key}: ${newValue}`
+  ),
 };
 
-const gap = 4;
-const getTab = count => ' '.repeat(count);
+const nodeHasObjectValueAmong = (value, oldValue, newValue) => (
+  _.isObject(value) || _.isObject(oldValue) || _.isObject(newValue)
+);
 
-const sampleRenderer = (ast, lineOffset = -2) => {
-  const newLineOffset = lineOffset + gap;
-  const lowerBraceOffset = newLineOffset - 2;
+const sampleRenderer = (ast, lineOffset = 2) => {
+  const lowerBraceOffset = lineOffset - 2;
 
-  const lineTab = getTab(newLineOffset);
+  const lineTab = getTab(lineOffset);
   const lowerBraceTab = getTab(lowerBraceOffset);
 
   const build = (node) => {
     const {
-      key, state, children, value,
+      key, type, children, value, oldValue, newValue,
     } = node;
 
-    if (state === 'nested') {
+    if (type === 'nested') {
       return stringifyValueFor
-        .unmodified(key, sampleRenderer(children, newLineOffset));
+        .unmodified(key, sampleRenderer(children, lineOffset + gap));
     }
 
-    if (_.isObject(value)) {
-      const deeperLineTab = getTab(newLineOffset + gap);
-      const deeperBraceTab = getTab(lowerBraceOffset + gap);
+    const values = [value, oldValue, newValue];
 
-      const complexValueString = _.keys(value)
-        .map(k => stringifyValueFor.unmodified(k, value[k]))
+    if (!nodeHasObjectValueAmong(...values)) {
+      return stringifyValueFor[type](key, value, oldValue, newValue, lineTab);
+    }
+
+    const deeperLineTab = getTab(lineOffset + gap);
+    const deeperBraceTab = getTab(lowerBraceOffset + gap);
+
+    const valuesForStringify = values.map((innerValue) => {
+      if (!_.isObject(innerValue) || !innerValue) {
+        return innerValue;
+      }
+
+      const complexValueString = _.keys(innerValue)
+        .map(innerKey => stringifyValueFor.unmodified(innerKey, innerValue[innerKey]))
         .join(`\n${deeperLineTab}`);
 
-      const complexValueStringWithBraces = `{\n${deeperLineTab}${complexValueString}\n${deeperBraceTab}}`;
-      return stringifyValueFor[state](key, complexValueStringWithBraces);
-    }
+      return `{\n${deeperLineTab}${complexValueString}\n${deeperBraceTab}}`;
+    });
 
-    return stringifyValueFor[state](key, value);
+    return stringifyValueFor[type](key, ...valuesForStringify, lineTab);
   };
 
   return `{\n${lineTab}${ast.map(build).join(`\n${lineTab}`)}\n${lowerBraceTab}}`;
