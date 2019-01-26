@@ -3,18 +3,12 @@ import _ from 'lodash';
 const stringify = value => (_.isObject(value) ? '[complex value]' : `'${value}'`);
 
 const getInfoFor = {
-  deleted: (root, { key, type }) => (
-    `Property '${root}${key}' was ${type}`
-  ),
-  added: (root, { key, type, value }) => (
-    `Property '${root}${key}' was ${type} with value: ${stringify(value)}`
-  ),
+  deleted: (root, { key, type }) => `Property '${root}${key}' was ${type}`,
+  added: (root, { key, type, value }) => `Property '${root}${key}' was ${type} with value: ${stringify(value)}`,
   unmodified: () => '',
   modified: (root, {
     key, type, oldValue, newValue,
-  }) => (
-    `Property '${root}${key}' was ${type} from ${stringify(oldValue)} to ${stringify(newValue)}`
-  ),
+  }) => `Property '${root}${key}' was ${type} from ${stringify(oldValue)} to ${stringify(newValue)}`,
   nested: (root, { key, children }, fn) => fn(children, `${root}${key}.`),
 };
 
