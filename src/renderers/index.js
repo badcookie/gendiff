@@ -1,7 +1,7 @@
-import sampleRenderer from './renderers/sample';
+import sample from './sample';
 
 const rendererFor = {
-  sample: sampleRenderer,
+  sample,
 };
 
 export default (ast, format) => rendererFor[format](ast);

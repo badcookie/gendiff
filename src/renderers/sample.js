@@ -1,57 +1,48 @@
 import _ from 'lodash';
 
 const gap = 4;
-const getTab = count => ' '.repeat(count);
+const initOffset = 2;
 
-const stringify = {
-  unmodified: (key, value) => `  ${key}: ${value}`,
-  deleted: (key, value) => `- ${key}: ${value}`,
-  added: (key, value) => `+ ${key}: ${value}`,
-  modified: (key, value, oldValue, newValue, tab) => (
-    `- ${key}: ${oldValue}\n${tab}+ ${key}: ${newValue}`
-  ),
+const getOffset = level => initOffset + (level - 1) * gap;
+const getTab = offset => ' '.repeat(offset);
+
+const stringify = (value, offset) => {
+  if (!_.isObject(value)) {
+    return value;
+  }
+  const lineTab = getTab(offset + gap);
+  const lowerBraceTab = getTab(offset - 2 + gap);
+  const complexValueString = _.keys(value)
+    .map(key => `  ${key}: ${value[key]}`)
+    .join(`\n${lineTab}`);
+  return `{\n${lineTab}${complexValueString}\n${lowerBraceTab}}`;
 };
 
-const nodeHasObjectValueAmong = (value, oldValue, newValue) => (
-  _.isObject(value) || _.isObject(oldValue) || _.isObject(newValue)
-);
+const getStringFor = {
+  deleted: (offset, key, value) => `- ${key}: ${stringify(value, offset)}`,
+  added: (offset, key, value) => `+ ${key}: ${stringify(value, offset)}`,
+  unmodified: (offset, key, value) => `  ${key}: ${stringify(value, offset)}`,
+  modified(offset, key, value, oldValue, newValue) {
+    return [this.deleted(offset, key, oldValue), this.added(offset, key, newValue)];
+  },
+  nested: (offset, key, value, oldValue, newValue, children, fn, depth) => `  ${key}: ${fn(children, depth)}`,
+};
 
-const sampleRenderer = (ast, lineOffset = 2) => {
-  const lowerBraceOffset = lineOffset - 2;
+const sample = (ast, depth = 1) => {
+  const offset = getOffset(depth);
+  const lineTab = getTab(offset);
+  const lowerBraceTab = getTab(offset - 2);
 
-  const lineTab = getTab(lineOffset);
-  const lowerBraceTab = getTab(lowerBraceOffset);
-
-  const build = (node) => {
+  const buildString = (node) => {
     const {
       key, type, children, value, oldValue, newValue,
     } = node;
-
-    if (type === 'nested') {
-      return stringify.unmodified(key, sampleRenderer(children, lineOffset + gap));
-    }
-
-    const values = [value, oldValue, newValue];
-
-    if (!nodeHasObjectValueAmong(...values)) {
-      return stringify[type](key, ...values, lineTab);
-    }
-
-    const deeperLineTab = getTab(lineOffset + gap);
-    const deeperBraceTab = getTab(lowerBraceOffset + gap);
-    const valuesToStringify = values.map((item) => {
-      if (!_.isObject(item) || !item) {
-        return item;
-      }
-      const complexValueString = _.keys(item)
-        .map(property => stringify.unmodified(property, item[property]))
-        .join(`\n${deeperLineTab}`);
-      return `{\n${deeperLineTab}${complexValueString}\n${deeperBraceTab}}`;
-    });
-    return stringify[type](key, ...valuesToStringify, lineTab);
+    const properties = [key, value, oldValue, newValue, children];
+    return getStringFor[type](offset, ...properties, sample, depth + 1);
   };
 
-  return `{\n${lineTab}${ast.map(build).join(`\n${lineTab}`)}\n${lowerBraceTab}}`;
+  const diffString = _.flatten(ast.map(buildString)).join(`\n${lineTab}`);
+  return `{\n${lineTab}${diffString}\n${lowerBraceTab}}`;
 };
 
-export default sampleRenderer;
+export default sample;
