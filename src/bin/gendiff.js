@@ -8,7 +8,7 @@ program
   .version(version);
 
 program
-  .option('-f, --format [type]', 'output format', 'sample');
+  .option('-f, --format [type]', 'output format', 'pretty');
 
 program
   .arguments('<firstConfig> <secondConfig>')
