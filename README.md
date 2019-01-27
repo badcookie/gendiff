@@ -5,11 +5,11 @@ A generator of configuration files' differences.
 [![Build Status](https://travis-ci.org/badcookie/hexlet-gendiff.svg?branch=master)](https://travis-ci.org/badcookie/hexlet-gendiff)
 
 ## Install
-[![asciicast](https://asciinema.org/a/dik36vtPVNxx1wDwgmv9ua9K1.svg)](https://asciinema.org/a/dik36vtPVNxx1wDwgmv9ua9K1)
+[![asciicast](https://asciinema.org/a/dxSexVAUpSiobRa94q3SOafTm.svg)](https://asciinema.org/a/dxSexVAUpSiobRa94q3SOafTm)
 
 ## Help
-[![asciicast](https://asciinema.org/a/8fLPDVpiePvZiyOnW4i4q4xQ2.svg)](https://asciinema.org/a/8fLPDVpiePvZiyOnW4i4q4xQ2)
+[![asciicast](https://asciinema.org/a/loM3todDGoTgQhmBhfh3NqGdM.svg)](https://asciinema.org/a/loM3todDGoTgQhmBhfh3NqGdM)
 
 ## Action
-[![asciicast](https://asciinema.org/a/gMa7uSdgzPoN8vU29PrJBNG0u.svg)](https://asciinema.org/a/gMa7uSdgzPoN8vU29PrJBNG0u)
+[![asciicast](https://asciinema.org/a/QuoYqaQqf32s7tsFF5WNvQfuW.svg)](https://asciinema.org/a/QuoYqaQqf32s7tsFF5WNvQfuW)
 
