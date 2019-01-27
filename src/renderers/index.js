@@ -1,9 +1,11 @@
-import sample from './sample';
+import pretty from './pretty';
 import plain from './plain';
+import json from './json';
 
 const rendererFor = {
-  sample,
+  pretty,
   plain,
+  json,
 };
 
 export default (ast, format) => rendererFor[format](ast);
