@@ -29,18 +29,18 @@ const getStringFor = {
   nested: (offset, { key, children }, fn, depth) => `  ${key}: ${fn(children, depth)}`,
 };
 
-const sample = (ast, depth = 1) => {
+const pretty = (ast, depth = 1) => {
   const offset = getOffset(depth);
   const lineTab = getTab(offset);
   const lowerBraceTab = getTab(offset - 2);
 
   const buildString = (node) => {
     const { type } = node;
-    return getStringFor[type](offset, node, sample, depth + 1);
+    return getStringFor[type](offset, node, pretty, depth + 1);
   };
 
   const diffString = _.flatten(ast.map(buildString)).join(`\n${lineTab}`);
   return `{\n${lineTab}${diffString}\n${lowerBraceTab}}`;
 };
 
-export default sample;
+export default pretty;
