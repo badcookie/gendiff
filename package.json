@@ -1,11 +1,11 @@
 {
   "name": "miraculous-gendiff",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "A generator of configuration files' differences",
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
   },
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "files": [
     "dist"
   ],
