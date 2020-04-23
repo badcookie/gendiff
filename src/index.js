@@ -4,12 +4,15 @@ import parse from './parsers';
 import buildDiff from './diff-builder';
 import render from './renderers';
 
-export default (filepath1, filepath2, outputFormat) => {
-  const content1 = fs.readFileSync(filepath1, 'utf-8');
-  const content2 = fs.readFileSync(filepath2, 'utf-8');
+export default (filepathBefore, filepathAfter, outputFormat) => {
+  const contentBefore = fs.readFileSync(filepathBefore, 'utf-8');
+  const contentAfter = fs.readFileSync(filepathAfter, 'utf-8');
 
-  const dataBefore = parse(content1, path.extname(filepath1));
-  const dataAfter = parse(content2, path.extname(filepath2));
+  const extBefore = path.extname(filepathBefore).slice(1);
+  const extAfter = path.extname(filepathAfter).slice(1);
+
+  const dataBefore = parse(contentBefore, extBefore);
+  const dataAfter = parse(contentAfter, extAfter);
 
   const astDiff = buildDiff(dataBefore, dataAfter);
   return render(astDiff, outputFormat);
