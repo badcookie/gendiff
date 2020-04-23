@@ -23,13 +23,13 @@ const check = ({
 
 test.each`
   fileBefore        | fileAfter         | fileExpected    | inputFormat     | outputFormat
-  ${'config1.json'} | ${'config2.json'} | ${'pretty.txt'} | ${'json'}      | ${'pretty'}
-  ${'config3.yml'}  | ${'config4.yml'}  | ${'pretty.txt'} | ${'yml/yaml'} | ${'pretty'}
-  ${'config5.ini'}  | ${'config6.ini'}  | ${'pretty.txt'} | ${'ini'}       | ${'pretty'}
-  ${'config1.json'} | ${'config2.json'} | ${'plain.txt'}  | ${'json'}      | ${'plain'}
-  ${'config3.yml'}  | ${'config4.yml'}  | ${'plain.txt'}  | ${'yml/yaml'} | ${'plain'}
-  ${'config5.ini'}  | ${'config6.ini'}  | ${'plain.txt'}  | ${'ini'}       | ${'plain'}
-  ${'config1.json'} | ${'config2.json'} | ${'json.txt'}   | ${'json'}      | ${'json'}
-  ${'config3.yml'}  | ${'config4.yml'}  | ${'json.txt'}   | ${'yml/yaml'} | ${'json'}
-  ${'config5.ini'}  | ${'config6.ini'}  | ${'json.txt'}   | ${'ini'}       | ${'json'}
+  ${'config1.json'} | ${'config2.json'} | ${'pretty.txt'} | ${'json'}       | ${'pretty'}
+  ${'config3.yml'}  | ${'config4.yml'}  | ${'pretty.txt'} | ${'yml/yaml'}   | ${'pretty'}
+  ${'config5.ini'}  | ${'config6.ini'}  | ${'pretty.txt'} | ${'ini'}        | ${'pretty'}
+  ${'config1.json'} | ${'config2.json'} | ${'plain.txt'}  | ${'json'}       | ${'plain'}
+  ${'config3.yml'}  | ${'config4.yml'}  | ${'plain.txt'}  | ${'yml/yaml'}   | ${'plain'}
+  ${'config5.ini'}  | ${'config6.ini'}  | ${'plain.txt'}  | ${'ini'}        | ${'plain'}
+  ${'config1.json'} | ${'config2.json'} | ${'json.txt'}   | ${'json'}       | ${'json'}
+  ${'config3.yml'}  | ${'config4.yml'}  | ${'json.txt'}   | ${'yml/yaml'}   | ${'json'}
+  ${'config5.ini'}  | ${'config6.ini'}  | ${'json.txt'}   | ${'ini'}        | ${'json'}
 `('Check rendering for $inputFormat format to compare with $outputFormat format', check);
